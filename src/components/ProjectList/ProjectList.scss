@@ -1,0 +1,13 @@
+.project-list {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 411px) {
+  .project-list {
+    flex-direction: column;
+    align-items: center;
+  }
+}
