@@ -2,7 +2,7 @@
 
 ## A platform to create custom forms to be embedded in chatbots
 
-### The idea of making this open source is so that the community can help MockBird by creating new templates and components, and also improve the app
+### The idea of making this open source is so that the community can help MockBird by creating new templates, components and also improving the app
 
 ### All merits will be recognized
 
