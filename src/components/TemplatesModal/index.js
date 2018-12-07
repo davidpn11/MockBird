@@ -8,16 +8,16 @@ import PropTypes from 'prop-types'
 const templates = [
   {
     id: 12323,
-    name: 'Material',
-    defaultColors: ['#5E35B1', '#4527A0', '#FBC02D'],
-    active: '',
-  },
-  {
-    id: 123456,
     name: 'Basic',
-    defaultColors: ['#64B5F6', '#2196F3', '#C0CA33'],
+    defaultColors: ['#5e35b1', '#4527a0', '#fbc02d'],
     active: '',
   },
+  // {
+  //   id: 123456,
+  //   name: 'Basic',
+  //   defaultColors: ['#64B5F6', '#2196F3', '#C0CA33'],
+  //   active: '',
+  // },
 ]
 
 const Template = styled.li`
