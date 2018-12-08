@@ -66,15 +66,9 @@ const Wrapper = styled.div`
       padding: 10px 20px;
       h2,
       p {
-        text-align: center;
-      }
-    }
-  }
-  @media only screen and (max-width: 320px) {
-    aside {
-      p {
         font-size: 12px;
-        line-height: 1;
+        line-height: 1.2rem;
+        text-align: center;
       }
     }
   }
