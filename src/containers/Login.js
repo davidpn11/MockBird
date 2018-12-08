@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
+
   .content {
     display: flex;
     flex-direction: row;
@@ -54,6 +55,28 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .content {
+      flex-direction: column;
+    }
+    aside {
+      height: 100%;
+      padding: 10px 20px;
+      h2,
+      p {
+        text-align: center;
+      }
+    }
+  }
+  @media only screen and (max-width: 320px) {
+    aside {
+      p {
+        font-size: 12px;
+        line-height: 1;
+      }
+    }
   }
 `
 
