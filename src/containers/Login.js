@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import googleLogo from '~/assets/GoogleLogo.svg'
 import { primaryColor } from '~/services/utils/colors'
-
+import logoWhite from '~/assets/logo-white.png'
 const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
@@ -95,7 +95,7 @@ const Login = ({ history }) => {
     <Wrapper>
       <div className="content">
         <aside>
-          <h1>Mock Bird</h1>
+          <img src={logoWhite} alt="Logo" />
           <h2>Build your custom forms in minutes!</h2>
           <p>
             Are you building a chatbot and need a form to get data from your

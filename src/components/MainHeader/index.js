@@ -9,6 +9,7 @@ import {
   Intent,
 } from '@blueprintjs/core'
 import withPermissionHOC from '~/services/auth/withPermissionHOC'
+import logoWhite from '~/assets/logo-white.png'
 
 const Wrapper = styled.div`
   background-color: ${primaryColor};
@@ -19,13 +20,13 @@ const Wrapper = styled.div`
   );
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 5px 15px;
   width: 100%;
   height: 100px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 10px;
-  & img {
+  & .profile-pic {
     width: 60px;
     height: 60px;
     cursor: pointer;
@@ -53,12 +54,18 @@ class MainHeader extends Component {
     const { userLogout } = this.state
     return (
       <Wrapper>
+        <img src={logoWhite} alt="Logo" width="200" />
         <Popover
           interactionKind={PopoverInteractionKind.CLICK_TARGET_ONLY}
           popoverClassName="pt-popover-content-sizing"
           position={Position.RIGHT}
         >
-          <img intent={Intent.PRIMARY} src={photoURL} alt="Profile" />
+          <img
+            className="profile-pic"
+            intent={Intent.PRIMARY}
+            src={photoURL}
+            alt="Profile"
+          />
           <div>
             <h5>{displayName}</h5>
             <Button onClick={() => userLogout()} className="pt-intent-danger">
