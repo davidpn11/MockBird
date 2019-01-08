@@ -140,7 +140,7 @@ class BuildModal extends Component {
       <ul className="w-100 flex flex-column">
         {Object.keys(screenBuilds).map(key => {
           const s = screenBuilds[key]
-          const url = `https://mockbird-client.herokuapp.com${s.generatedURL}`
+          const url = `http://client.mockbird.io${s.generatedURL}`
           return (
             <li key={key} className="flex flex-column">
               <strong>{s.name}</strong>
