@@ -220,9 +220,7 @@ class BuildModal extends Component {
                     intent={Intent.PRIMARY}
                     loading={isBuilding}
                     onClick={() =>
-                      makeBuild(values).then(
-                        teste => !console.log(teste) && this.toggleShowBuild()
-                      )
+                      makeBuild(values).then(teste => this.toggleShowBuild())
                     }
                   >
                     Build
