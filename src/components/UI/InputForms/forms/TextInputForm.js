@@ -3,7 +3,7 @@ import { FormGroup, InputGroup, Intent, Switch } from '@blueprintjs/core'
 import PropTypes from 'prop-types'
 import FormHandler from '~/components/FormHandler'
 import { varNameRegex } from '~/services/utils/constants'
-
+import { masks } from '~/services/utils/constants'
 const TextInputForm = ({
   isRequired,
   varName,
@@ -32,7 +32,14 @@ const TextInputForm = ({
 
   return (
     <FormHandler
-      initialValues={{ isRequired, varName, placeholder, id, errorMessage }}
+      initialValues={{
+        isRequired,
+        varName,
+        placeholder,
+        id,
+        errorMessage,
+        mask,
+      }}
       resetValues={resetValues}
       onValidate={handleValidate}
       autoSave={values => onChange(values)}
@@ -94,6 +101,22 @@ const TextInputForm = ({
               intent={errors.errorMessage ? Intent.DANGER : Intent.NONE}
               onChange={handleChange}
             />
+          </FormGroup>
+          <FormGroup
+            label="Mask"
+            labelFor="input-mask"
+            labelInfo="(Add specific masks to your input)"
+          >
+            <div className="bp3-select bp3-fill">
+              <select name="mask" onChange={handleChange} defaultValue={mask}>
+                <option value="">-</option>
+                {masks.map(o => (
+                  <option value={o.value} key={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </FormGroup>
         </div>
       )}
