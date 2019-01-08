@@ -4,7 +4,15 @@ import PropTypes from 'prop-types'
 import FormHandler from '~/components/FormHandler'
 import { varNameRegex } from '~/services/utils/constants'
 
-const TextInputForm = ({ isRequired, varName, placeholder, onChange, id }) => {
+const TextInputForm = ({
+  isRequired,
+  varName,
+  placeholder,
+  onChange,
+  id,
+  errorMessage = '',
+  mask = '',
+}) => {
   const handleValidate = values => {
     let errors = {}
 
@@ -24,7 +32,7 @@ const TextInputForm = ({ isRequired, varName, placeholder, onChange, id }) => {
 
   return (
     <FormHandler
-      initialValues={{ isRequired, varName, placeholder, id }}
+      initialValues={{ isRequired, varName, placeholder, id, errorMessage }}
       resetValues={resetValues}
       onValidate={handleValidate}
       autoSave={values => onChange(values)}
@@ -71,18 +79,35 @@ const TextInputForm = ({ isRequired, varName, placeholder, onChange, id }) => {
               onChange={handleChange}
             />
           </span>
+          <FormGroup
+            label="Error Message"
+            labelFor="input-error-mesage"
+            labelInfo=" (Add a message in case input error)"
+            intent={errors.placeholder ? Intent.DANGER : Intent.NONE}
+            helperText={errors.placeholder || ''}
+          >
+            <InputGroup
+              id="input-error-mesage"
+              value={values.errorMessage}
+              name="errorMessage"
+              placeholder="Error message"
+              intent={errors.errorMessage ? Intent.DANGER : Intent.NONE}
+              onChange={handleChange}
+            />
+          </FormGroup>
         </div>
       )}
     </FormHandler>
   )
 }
-// labelInfo={requiredLabel && "(required)"}
 TextInputForm.propTypes = {
   id: PropTypes.string,
   isRequired: PropTypes.bool,
   varName: PropTypes.string,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
+  errorMessage: PropTypes.string,
+  mask: PropTypes.string,
 }
 
 export default TextInputForm
