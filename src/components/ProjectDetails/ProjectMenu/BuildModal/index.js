@@ -53,15 +53,35 @@ class BuildModal extends Component {
     }))
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    if (!nextProps.isOpen) {
+      return null
+    }
     if (nextProps.build || nextProps.screens) {
       if (!isEmpty(nextProps.build)) {
-        const screenBuilds = nextProps.build.screenBuilds.reduce(
-          (obj, curr) => {
-            const { id, ...rest } = curr
+        let hasChanges = false
+        let screenBuilds = nextProps.build.screenBuilds.reduce((obj, curr) => {
+          const { id, ...rest } = curr
+          const equiScreen = nextProps.screens.find(s => s.id === id)
+          if (equiScreen) {
+            rest.name = equiScreen.name
             return { ...obj, [id]: rest }
-          },
-          {}
-        )
+          } else {
+            return obj
+          }
+        }, {})
+        const newScreens = nextProps.screens.reduce((newObj, curr) => {
+          if (!screenBuilds[curr.id]) {
+            const { id, name } = curr
+            return {
+              ...newObj,
+              [id]: { name, generatedURL: '', targetURL: '' },
+            }
+          } else {
+            return newObj
+          }
+        }, {})
+        screenBuilds = { ...screenBuilds, ...newScreens }
+        console.log(newScreens)
         return { build: { ...nextProps.build, screenBuilds } }
       } else if (
         nextProps.screens &&
@@ -89,6 +109,7 @@ class BuildModal extends Component {
   }
 
   getFormFields(values, errors = {}, directChange) {
+    console.log({ values })
     return Object.keys(values).map(key => {
       const hasError = errors[key] ? Intent.DANGER : Intent.NONE
       const screen = values[key]
@@ -140,6 +161,10 @@ class BuildModal extends Component {
       <ul className="w-100 flex flex-column">
         {Object.keys(screenBuilds).map(key => {
           const s = screenBuilds[key]
+
+          if (!s.generatedURL) {
+            return null
+          }
           const url = `http://client.mockbird.io${s.generatedURL}`
           return (
             <li key={key} className="flex flex-column">

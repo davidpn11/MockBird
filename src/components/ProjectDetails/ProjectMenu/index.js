@@ -149,6 +149,7 @@ class ProjectMenu extends Component {
     } = this.state
     const { history, projectDetailStore, buildStore } = this.props
     const project = this.props.projectDetailStore.project
+    const screens = this.props.projectDetailStore.screens
     const build = this.props.buildStore.currentBuild
     return (
       <div className="flex flex-column h-100">
@@ -199,7 +200,7 @@ class ProjectMenu extends Component {
           isOpen={buildModalOpen}
           closeModal={this.closeModal}
           isBuilding={isBuilding}
-          screens={project.screens}
+          screens={screens}
           makeBuild={this.makeBuild}
         />
       </div>
