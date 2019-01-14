@@ -35,13 +35,7 @@ const RadioButton = ({
           </Radio>
         ))
       : options.map((opt, index) => (
-          <div
-            key={index}
-            primaryColor={primaryColor}
-            secundaryColor={secundaryColor}
-            accentColor={accentColor}
-            backgroundColor={backgroundColor}
-          >
+          <div key={index}>
             <input
               type="radio"
               id={index}
