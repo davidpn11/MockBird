@@ -9,6 +9,7 @@ import {
   Position,
   Intent,
   Icon,
+  Tooltip,
 } from '@blueprintjs/core'
 const InputsMenu = ({ inputOptions, addNewInput, isAdding, disabled }) => {
   const getInputName = name => {
@@ -41,16 +42,18 @@ const InputsMenu = ({ inputOptions, addNewInput, isAdding, disabled }) => {
         </Menu>
       }
     >
-      <Button
-        intent={Intent.PRIMARY}
-        className="br-100 ma2"
-        loading={isAdding}
-        large
-        disabled={disabled}
-      >
-        {' '}
-        <Icon icon="plus" iconSize={25} />
-      </Button>
+      <Tooltip content="Add new input" position={Position.BOTTOM}>
+        <Button
+          intent={Intent.PRIMARY}
+          className="br-100 ma2"
+          loading={isAdding}
+          large
+          disabled={disabled}
+        >
+          {' '}
+          <Icon icon="plus" iconSize={25} />
+        </Button>
+      </Tooltip>
     </Popover>
   )
 }
