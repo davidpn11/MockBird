@@ -42,6 +42,7 @@ class ProjectMenu extends Component {
     isUpdating: false,
     isBuilding: false,
     buildModalOpen: false,
+    isAddingScreen: false,
   }
 
   closeModal = () => {
@@ -80,7 +81,11 @@ class ProjectMenu extends Component {
   }
 
   addScreen() {
-    this.props.projectDetailStore.addScreen()
+    this.setState({ isAddingScreen: true }, () => {
+      this.props.projectDetailStore
+        .addScreen()
+        .finally(() => this.setState({ isAddingScreen: false }))
+    })
   }
 
   deleteScreen = async screenId =>
@@ -140,6 +145,7 @@ class ProjectMenu extends Component {
       isUpdating,
       isBuilding,
       buildModalOpen,
+      isAddingScreen,
     } = this.state
     const { history, projectDetailStore, buildStore } = this.props
     const project = this.props.projectDetailStore.project
@@ -167,6 +173,7 @@ class ProjectMenu extends Component {
           changeCurrScreen={id => this.changeCurrentScreen(id)}
           addScreen={() => this.addScreen()}
           deleteScreen={this.deleteScreen}
+          isAddingScreen={isAddingScreen}
         />
         <ProjectButton
           backgroundColor="#FFB300"

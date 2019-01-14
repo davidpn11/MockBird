@@ -166,13 +166,17 @@ class ProjectDetailStore {
 
   @action
   addScreen() {
-    db.addScreenAPI()
-      .then(screen => {
-        this._project.screens = [...this._project.screens, screen]
-      })
-      .catch(error => {
-        console.error('Error adding document: ', error)
-      })
+    return new Promise((resolve, reject) => {
+      db.addScreenAPI()
+        .then(screen => {
+          this._project.screens = [...this._project.screens, screen]
+          resolve()
+        })
+        .catch(error => {
+          console.error('Error adding document: ', error)
+          reject(new Error('Error adding document:'))
+        })
+    })
   }
 
   @action

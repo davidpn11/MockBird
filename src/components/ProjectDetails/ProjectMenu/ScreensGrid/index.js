@@ -2,7 +2,7 @@ import React from 'react'
 import { gray800 } from '~/services/utils/colors'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Icon } from '@blueprintjs/core'
+import { Icon, Spinner, Intent } from '@blueprintjs/core'
 import DeletePopover from '~/components/UI/DeletePopover'
 
 const Grid = styled.div`
@@ -48,6 +48,7 @@ const ScreensGrid = ({
   changeCurrScreen,
   addScreen,
   deleteScreen,
+  isAddingScreen,
 }) => (
   <Grid>
     {screens.map(s => (
@@ -65,8 +66,16 @@ const ScreensGrid = ({
         {s.name}
       </span>
     ))}
-    <span key="add" className="grid-item " onClick={() => addScreen()}>
-      <Icon icon="plus" iconSize={25} color="#137cbd" />
+    <span
+      key="add"
+      className="grid-item "
+      onClick={() => !isAddingScreen && addScreen()}
+    >
+      {isAddingScreen ? (
+        <Spinner size={25} intent={Intent.PRIMARY} />
+      ) : (
+        <Icon icon="plus" iconSize={25} color="#137cbd" />
+      )}
     </span>
   </Grid>
 )
@@ -77,6 +86,7 @@ ScreensGrid.propTypes = {
   changeCurrScreen: PropTypes.func,
   addScreen: PropTypes.func,
   deleteScreen: PropTypes.func,
+  isAddingScreen: PropTypes.bool,
 }
 
 export default ScreensGrid
