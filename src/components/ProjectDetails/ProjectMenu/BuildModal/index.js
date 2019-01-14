@@ -165,7 +165,7 @@ class BuildModal extends Component {
           if (!s.generatedURL) {
             return null
           }
-          const url = `http://client.mockbird.io${s.generatedURL}`
+          const url = `https://client.mockbird.io${s.generatedURL}`
           return (
             <li key={key} className="flex flex-column">
               <strong>{s.name}</strong>
