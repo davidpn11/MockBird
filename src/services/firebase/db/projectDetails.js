@@ -67,9 +67,9 @@ export function updateScreenSubmitAPI(submitText: string) {
   return screenRef && screenRef.update({ submitText })
 }
 
-export function addScreenAPI(): Promise<any> {
+export function addScreenAPI(nameFactor: number): Promise<any> {
   const screen = {
-    name: 'New Screen',
+    name: nameFactor ? `New Screen (${nameFactor})` : 'New Screen',
     isFinal: true,
     size: 'full',
     maxWeight: 5,

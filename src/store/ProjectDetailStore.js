@@ -167,7 +167,24 @@ class ProjectDetailStore {
   @action
   addScreen() {
     return new Promise((resolve, reject) => {
-      db.addScreenAPI()
+      let highestNumber = -1
+      const reg = /\(([0-9]+)\)/
+      this.screens.map(s => {
+        if (s.name.includes('New Screen')) {
+          highestNumber = highestNumber === -1 ? 0 : highestNumber
+          const sub = s.name.substring(s.name.length - 3, s.name.length)
+          if (reg.test(sub)) {
+            highestNumber =
+              Number(sub[1]) > highestNumber ? Number(sub[1]) : highestNumber
+          }
+        }
+      })
+      const addScreenCall =
+        highestNumber === -1
+          ? db.addScreenAPI()
+          : db.addScreenAPI(highestNumber + 1)
+
+      addScreenCall
         .then(screen => {
           this._project.screens = [...this._project.screens, screen]
           resolve()
