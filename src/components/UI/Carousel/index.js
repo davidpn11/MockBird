@@ -6,6 +6,7 @@ import styled from 'styled-components'
 const CarouselWrapper = styled.div`
   position: relative;
   display: flex;
+  align-items: center;
 
   img {
     height: 100%;
@@ -13,9 +14,6 @@ const CarouselWrapper = styled.div`
 `
 
 const CarouselButton = styled(Button)`
-  position: absolute;
-  left: ${props => (props.left ? '0' : '')};
-  right: ${props => (props.right ? '0' : '')};
   height: 50px;
   width: 50px;
   border-radius: 100%;
@@ -95,19 +93,19 @@ class Carousel extends Component {
     const { currImg, isLoading } = this.state
     return (
       <div>
-        {isLoading ? <Spinner size={25} intent={Intent.PRIMARY} /> : null}
+        {isLoading ? (
+          <div className="w-100 h-100 flex items-center justify-center">
+            <Spinner size={25} intent={Intent.PRIMARY} />
+          </div>
+        ) : null}
         <CarouselWrapper hidden={isLoading}>
-          <div className="flex h-100 items-center">
-            <CarouselButton minimal onClick={this.prevImg} left>
-              <Icon icon="chevron-left" iconSize={25} color="white" />
-            </CarouselButton>
-          </div>
+          <CarouselButton minimal onClick={this.prevImg}>
+            <Icon icon="chevron-left" iconSize={25} color="white" />
+          </CarouselButton>
           {this.getImgs()}
-          <div className="flex h-100 items-center">
-            <CarouselButton minimal onClick={this.nextImg} right>
-              <Icon icon="chevron-right" iconSize={25} color="white" />
-            </CarouselButton>
-          </div>
+          <CarouselButton minimal onClick={this.nextImg}>
+            <Icon icon="chevron-right" iconSize={25} color="white" />
+          </CarouselButton>
         </CarouselWrapper>
       </div>
     )
