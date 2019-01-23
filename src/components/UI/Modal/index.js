@@ -9,6 +9,7 @@ export default class Modal extends Component {
     render: PropTypes.func,
     title: PropTypes.string.isRequired,
     children: PropTypes.object,
+    width: PropTypes.string,
   }
 
   render() {
@@ -17,6 +18,7 @@ export default class Modal extends Component {
         isOpen={this.props.isOpen}
         onClose={() => this.props.closeModal()}
         title={this.props.title}
+        style={this.props.width ? { width: this.props.width } : {}}
       >
         {this.props.render ? this.props.render() : this.props.children}
       </Dialog>

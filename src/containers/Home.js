@@ -35,6 +35,7 @@ export class Home extends Component {
           <Modal
             closeModal={() => this.closeModal()}
             isOpen={this.state.isOpen}
+            width="80%"
             render={() => (
               <TemplatesModal closeModal={() => this.closeModal()} />
             )}
