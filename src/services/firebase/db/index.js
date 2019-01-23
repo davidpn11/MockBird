@@ -5,6 +5,7 @@ import type { User } from '../../utils/types'
 export * from './projectDetails'
 export * from './project'
 export * from './build'
+export * from './templates'
 export let userRef = null
 
 export function setUserAPI(userData: User) {

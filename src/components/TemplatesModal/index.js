@@ -7,25 +7,25 @@ import PropTypes from 'prop-types'
 import Carousel from '~/components/UI/Carousel'
 
 const imgs = [
-  'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
-  'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+  'https://res.cloudinary.com/davidpn11/image/upload/v1548264942/MockBird/12323/basic2.png',
+  'https://res.cloudinary.com/davidpn11/image/upload/v1548264941/MockBird/12323/basic1.png',
   'https://images.unsplash.com/photo-1534406315430-4d7cf92bc690?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
 ]
 
-const templates = [
-  {
-    id: 12323,
-    name: 'Basic',
-    defaultColors: ['#5e35b1', '#4527a0', '#fbc02d'],
-    active: '',
-  },
-  // {
-  //   id: 123456,
-  //   name: 'Basic',
-  //   defaultColors: ['#64B5F6', '#2196F3', '#C0CA33'],
-  //   active: '',
-  // },
-]
+// const templates = [
+//   {
+//     id: 12323,
+//     name: 'Basic',
+//     defaultColors: ['#5e35b1', '#4527a0', '#fbc02d'],
+//     active: '',
+//   },
+//   // {
+//   //   id: 123456,
+//   //   name: 'Basic',
+//   //   defaultColors: ['#64B5F6', '#2196F3', '#C0CA33'],
+//   //   active: '',
+//   // },
+// ]
 
 const Template = styled.li`
   height: 100%;
@@ -64,7 +64,7 @@ class TemplatesModal extends Component {
     history: PropTypes.object,
   }
   state = {
-    templates,
+    templates: [],
     projectName: '',
     isCreating: false,
   }
@@ -72,6 +72,10 @@ class TemplatesModal extends Component {
   constructor(props) {
     super(props)
     this.nameChanged = this.nameChanged.bind(this)
+  }
+
+  componentDidMount = () => {
+    db.getTemplatesAPI().then(templates => this.setState({ templates }))
   }
 
   setActive(template) {
@@ -128,8 +132,10 @@ class TemplatesModal extends Component {
 
     return (
       <div className="flex flex-column h-100">
-        <Carousel imgs={imgs} />
-        {/* <ul>{this.getTemplates()}</ul>
+        <div className="flex flex-row">
+          <ul>{this.getTemplates()}</ul>
+          <Carousel imgs={imgs} />
+        </div>
         <div className="pt-dialog-footer flex items-center mr3">
           <NameInput
             className="bp3-fill"
@@ -150,7 +156,7 @@ class TemplatesModal extends Component {
             Finish
             <span className="pt-icon-standard pt-icon-arrow-right pt-align-right" />
           </Button>
-        </div> */}
+        </div>
       </div>
     )
   }
