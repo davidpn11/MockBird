@@ -1,120 +1,194 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { Button, Intent, InputGroup } from '@blueprintjs/core'
+import {
+  Button,
+  Intent,
+  InputGroup,
+  Collapse,
+  Icon,
+  Spinner,
+} from '@blueprintjs/core'
 import { db } from '~/services/firebase'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Carousel from '~/components/UI/Carousel'
-
-const imgs = [
-  'https://res.cloudinary.com/davidpn11/image/upload/v1548264942/MockBird/12323/basic2.png',
-  'https://res.cloudinary.com/davidpn11/image/upload/v1548264941/MockBird/12323/basic1.png',
-  'https://images.unsplash.com/photo-1534406315430-4d7cf92bc690?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-]
-
-// const templates = [
-//   {
-//     id: 12323,
-//     name: 'Basic',
-//     defaultColors: ['#5e35b1', '#4527a0', '#fbc02d'],
-//     active: '',
-//   },
-//   // {
-//   //   id: 123456,
-//   //   name: 'Basic',
-//   //   defaultColors: ['#64B5F6', '#2196F3', '#C0CA33'],
-//   //   active: '',
-//   // },
-// ]
-
-const Template = styled.li`
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border: 0px solid rgba(123, 123, 123, 0.498039);
-  border-radius: 4px;
-  color: rgb(153, 153, 153);
-  line-height: 50px;
-  padding-left: 32px;
-  font-size: 24px;
-  font-weight: 500;
-  background-color: rgb(255, 255, 255);
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
-  margin: 0 15px 5px 15px;
-  cursor: pointer;
-  &.active {
-    background-color: rgb(214, 214, 214);
-  }
-  & > div {
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    margin-right: 10px;
-    background-color: ${props => (props.color ? props.color : 'black')};
-  }
-`
+import { primaryBlue, gray800 } from '~/services/utils/colors'
+import HelperText from '../UI/HelperText'
 
 const NameInput = styled(InputGroup)`
   margin: 0 15px;
 `
 
+const TemplatesLoadingWraper = styled.div`
+  display: flex;
+  height: 100%;
+  min-height: 500px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`
+
+const TemplateStyled = styled.li`
+  display: flex;
+  min-width: 250px;
+  flex-direction: column;
+  align-items: center;
+  border: 0px solid rgba(123, 123, 123, 0.498039);
+  border-radius: 4px;
+  color: rgb(153, 153, 153);
+  line-height: 50px;
+  font-size: 24px;
+  font-weight: 500;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
+  margin: 0 15px 5px 15px;
+  padding: 0 10px;
+  & > .template-header {
+    cursor: pointer;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    color: ${gray800};
+  }
+`
+
+const CollapseWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  & > .author {
+    color: rgb(153, 153, 153);
+    font-size: 13px;
+    display: flex;
+    a {
+      color: rgb(153, 153, 153);
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+        color: ${primaryBlue};
+      }
+    }
+  }
+  & > .colors {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+`
+
+const ColorCircle = styled.span`
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: ${props => (props.color ? props.color : 'black')};
+`
+
+const HelperTextWrapper = styled.div`
+  height: 500px;
+  margin: 0 30px;
+`
+
+const Template = ({ template, setActive, isActive }) => (
+  <TemplateStyled>
+    <div className="template-header" onClick={() => setActive(template.id)}>
+      <span className="ml3">{template.name}</span>
+      <span>
+        {isActive ? (
+          <Icon icon="tick-circle" iconSize={20} intent={Intent.SUCCESS} />
+        ) : (
+          <Icon icon="chevron-down" iconSize={20} color="black" />
+        )}
+      </span>
+    </div>
+    <Collapse isOpen={isActive}>
+      <CollapseWrapper>
+        <span className="author">
+          Made by
+          <a href={template.authorURL} target="blank" className="ml1">
+            {template.author}
+          </a>
+        </span>
+        <div className="colors">
+          <span className="mr3">Default colors:</span>
+          {template.defaultColors
+            ? template.defaultColors.map((color, i) => (
+                <ColorCircle key={i} color={color} />
+              ))
+            : null}
+        </div>
+      </CollapseWrapper>
+    </Collapse>
+  </TemplateStyled>
+)
+
+Template.propTypes = {
+  template: PropTypes.object,
+  setActive: PropTypes.func,
+  isActive: PropTypes.bool,
+}
+
 class TemplatesModal extends Component {
   static propTypes = {
     history: PropTypes.object,
   }
+
   state = {
     templates: [],
     projectName: '',
+    selectedTemplate: '',
     isCreating: false,
+    isLoadingTemplates: true,
   }
 
-  constructor(props) {
-    super(props)
-    this.nameChanged = this.nameChanged.bind(this)
+  get currentTemplate() {
+    const { templates, selectedTemplate } = this.state
+    return templates.length > 0 && selectedTemplate
+      ? templates.find(t => t.id === selectedTemplate) || {}
+      : {}
+  }
+
+  getImages() {
+    return this.currentTemplate.images || []
+  }
+  setActive = id =>
+    this.setState(prev => ({
+      selectedTemplate: prev.selectedTemplate !== id ? id : '',
+    }))
+
+  getTemplates() {
+    const { templates, selectedTemplate } = this.state
+    return (
+      <ul>
+        {templates.map(t => (
+          <Template
+            key={t.id}
+            template={t}
+            setActive={this.setActive}
+            isActive={selectedTemplate === t.id}
+          />
+        ))}
+      </ul>
+    )
   }
 
   componentDidMount = () => {
-    db.getTemplatesAPI().then(templates => this.setState({ templates }))
-  }
-
-  setActive(template) {
-    const temps = this.state.templates.map(t => ({
-      ...t,
-      active: t.id === template.id ? 'active' : '',
-    }))
-    this.setState({ templates: temps, selectedTemplate: template })
-  }
-
-  getTemplates() {
-    const { templates } = this.state
-    return templates.map(t => (
-      <Template
-        key={t.id}
-        color={t.defaultColors[0]}
-        className={t.active}
-        onClick={() => this.setActive(t)}
-      >
-        <div />
-        <span>{t.name}</span>
-      </Template>
-    ))
-  }
-
-  nameChanged(event) {
-    this.setState({ projectName: event.target.value })
+    db.getTemplatesAPI().then(templates =>
+      this.setState({ templates, isLoadingTemplates: false }, () =>
+        console.log(this.state.templates)
+      )
+    )
   }
 
   addProject() {
     this.setState({ isCreating: true }, () => {
       const { projectName, selectedTemplate } = this.state
       const proj = {
-        templateId: selectedTemplate.id,
+        templateId: selectedTemplate,
         name: projectName,
-        primaryColor: selectedTemplate.defaultColors[0],
-        secundaryColor: selectedTemplate.defaultColors[1],
+        primaryColor: this.currentTemplate.defaultColors[0],
+        secundaryColor: this.currentTemplate.defaultColors[1],
         backgroundColor: '#e5e5e5',
-        accentColor: selectedTemplate.defaultColors[2],
+        accentColor: this.currentTemplate.defaultColors[2],
         lastPublished: '',
       }
       db.addProjectAPI(proj)
@@ -127,36 +201,57 @@ class TemplatesModal extends Component {
     })
   }
 
-  render() {
-    const { projectName, selectedTemplate, isCreating } = this.state
+  nameChanged = event => {
+    this.setState({ projectName: event.target.value })
+  }
 
+  render() {
+    const {
+      isLoadingTemplates,
+      isCreating,
+      projectName,
+      selectedTemplate,
+    } = this.state
     return (
-      <div className="flex flex-column h-100">
-        <div className="flex flex-row">
-          <ul>{this.getTemplates()}</ul>
-          <Carousel imgs={imgs} />
-        </div>
-        <div className="pt-dialog-footer flex items-center mr3">
-          <NameInput
-            className="bp3-fill"
-            type="text"
-            value={this.state.value}
-            onChange={this.nameChanged}
-            placeholder="Project Name"
-            dir="auto"
-          />
-          <Button
-            disabled={projectName.length === 0 || !selectedTemplate}
-            large="true"
-            intent={Intent.SUCCESS}
-            className="grow-1"
-            loading={isCreating}
-            onClick={() => this.addProject()}
-          >
-            Finish
-            <span className="pt-icon-standard pt-icon-arrow-right pt-align-right" />
-          </Button>
-        </div>
+      <div className="mt3">
+        {isLoadingTemplates ? (
+          <TemplatesLoadingWraper>
+            <Spinner size={40} intent={Intent.PRIMARY} />
+          </TemplatesLoadingWraper>
+        ) : (
+          <div className="flex flex-column w-100">
+            <div className="flex flex-row justify-between">
+              {this.getTemplates()}
+              {selectedTemplate ? (
+                <Carousel imgs={this.getImages()} />
+              ) : (
+                <HelperTextWrapper>
+                  <HelperText text="Select a template to preview it and create a new project" />
+                </HelperTextWrapper>
+              )}
+            </div>
+            <div className="pt-dialog-footer flex items-center mr3 mt3">
+              <NameInput
+                className="bp3-fill"
+                type="text"
+                value={this.state.value}
+                onChange={this.nameChanged}
+                placeholder="Project Name"
+                dir="auto"
+              />
+              <Button
+                disabled={projectName.length === 0 || !selectedTemplate}
+                large="true"
+                intent={Intent.SUCCESS}
+                className="grow-1"
+                loading={isCreating}
+                onClick={() => this.addProject()}
+              >
+                Finish
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
