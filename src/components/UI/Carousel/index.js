@@ -7,7 +7,6 @@ const CarouselWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-
   img {
     height: 100%;
   }
@@ -100,11 +99,11 @@ class Carousel extends Component {
         ) : null}
         <CarouselWrapper hidden={isLoading}>
           <CarouselButton minimal onClick={this.prevImg}>
-            <Icon icon="chevron-left" iconSize={25} color="white" />
+            <Icon icon="chevron-left" iconSize={25} />
           </CarouselButton>
           {this.getImgs()}
           <CarouselButton minimal onClick={this.nextImg}>
-            <Icon icon="chevron-right" iconSize={25} color="white" />
+            <Icon icon="chevron-right" iconSize={25} />
           </CarouselButton>
         </CarouselWrapper>
       </div>
