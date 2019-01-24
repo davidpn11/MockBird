@@ -169,7 +169,7 @@ class ProjectDetailStore {
     return new Promise((resolve, reject) => {
       let highestNumber = -1
       const reg = /\(([0-9]+)\)/
-      this.screens.map(s => {
+      this.screens.forEach(s => {
         if (s.name.includes('New Screen')) {
           highestNumber = highestNumber === -1 ? 0 : highestNumber
           const sub = s.name.substring(s.name.length - 3, s.name.length)
