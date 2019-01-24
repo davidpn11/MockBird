@@ -20,7 +20,13 @@ const CarouselButton = styled(Button)`
 `
 
 const Img = ({ src, isHidden, onLoad, width }) => (
-  <img src={src} width={width} hidden={isHidden} onLoad={onLoad} />
+  <img
+    src={src}
+    width={width}
+    hidden={isHidden}
+    onLoad={onLoad}
+    alt="Template screenshots"
+  />
 )
 
 Img.propTypes = {
