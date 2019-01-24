@@ -1,5 +1,6 @@
 export const primaryColor = '#607d8b'
 export const primaryColorDark = '#546e7a'
+export const primaryBlue = '#137cbd'
 export const whitesmoke = '#e5e5e5'
 export const accentColor = '#FFB300'
 export const gray600 = '#757575'
