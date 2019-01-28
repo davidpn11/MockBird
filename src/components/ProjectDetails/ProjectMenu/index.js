@@ -7,6 +7,7 @@ import { Button, Intent, Icon } from '@blueprintjs/core'
 import ConfigModal from './ConfigModal'
 import styled from 'styled-components'
 import BuildModal from './BuildModal'
+import { AdvancedConfigs } from '~/store'
 
 const ProjectButton = styled.button`
   display: flex;
@@ -95,6 +96,10 @@ class ProjectMenu extends Component {
     this.props.projectDetailStore.setCurrentScreen(id)
   }
 
+  setAdvancedConfig(config) {
+    this.props.projectDetailStore.setAdvancedConfig(config)
+  }
+
   makeBuild = screens => {
     return new Promise(async (resolve, reject) => {
       const project = this.props.projectDetailStore.project
@@ -178,7 +183,8 @@ class ProjectMenu extends Component {
         />
         <ProjectButton
           backgroundColor="#FFB300"
-          onClick={() => this.setState({ configModalOpen: true })}
+          // onClick={() => this.setState({ configModalOpen: true })}
+          onClick={() => this.setAdvancedConfig(AdvancedConfigs.config)}
         >
           <Icon icon="cog" color="white" iconSize={15} />
         </ProjectButton>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { CompactPicker } from 'react-color'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import styled from 'styled-components'
+import { gray400 } from '~/services/utils/colors'
 
 const ColorPickerWrapper = styled.div`
   display: flex;
@@ -13,7 +14,12 @@ const ColorPickerWrapper = styled.div`
     margin: 10px;
     width: 50px;
     height: 50px;
-    border: none;
+    border: ${props =>
+      props.color.toLowerCase() === 'white' ||
+      props.color.toLowerCase() === '#fff' ||
+      props.color.toLowerCase() === '#ffffff'
+        ? `1px solid ${gray400}`
+        : 'none'};
     border-radius: 50%;
     background-color: ${props => (props.color ? props.color : 'white')};
     &:hover {

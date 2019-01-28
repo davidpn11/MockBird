@@ -5,6 +5,11 @@ const updateScreenThrottle = throttle(db.updateScreenAPI, 1000)
 const updateScreenSubmitThrottle = throttle(db.updateScreenSubmitAPI, 1000)
 const updateInputThrottle = throttle(db.updateInputAPI, 1000)
 
+export const AdvancedConfigs = {
+  build: 'BUILD',
+  config: 'CONFIG',
+}
+
 class ProjectDetailStore {
   @observable
   _inputOptions = {}
@@ -14,6 +19,8 @@ class ProjectDetailStore {
   _currScreen = ''
   @observable
   _currScreenInput = ''
+  @observable
+  _advancedConfig = ''
 
   constructor() {
     this.fetchInputOptions()
@@ -65,6 +72,7 @@ class ProjectDetailStore {
   get screenName() {
     return this.currScreen ? this.currScreen.name : ''
   }
+
   @computed
   get screens() {
     return this.project.screens || []
@@ -72,6 +80,16 @@ class ProjectDetailStore {
 
   get deepScreens() {
     return this.project.screens ? toJS(this.project.screens) : []
+  }
+
+  @computed
+  get advancedConfig() {
+    return this._advancedConfig
+  }
+
+  @action
+  setAdvancedConfig(config = '') {
+    this._advancedConfig = config
   }
 
   @action
@@ -138,6 +156,7 @@ class ProjectDetailStore {
     } else {
       this._currScreen = id
     }
+    this._advancedConfig = ''
     await this.setScreenInputs(this._currScreen)
   }
 
@@ -267,6 +286,7 @@ class ProjectDetailStore {
 
   @action
   setCurrScreenInput(id) {
+    this._advancedConfig = ''
     this._currScreenInput = id
   }
 
