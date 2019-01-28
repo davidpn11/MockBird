@@ -9,6 +9,8 @@ import Modal from '~/components/UI/Modal'
 import TemplatesModal from '~/components/TemplatesModal'
 import Loader from '~/components/UI/Loader'
 import GlobalLoader from '~/components/UI/GlobalLoader'
+import { isMobile } from '~/services/utils/functions'
+
 @observer
 export class Home extends Component {
   state = {
@@ -35,7 +37,7 @@ export class Home extends Component {
           <Modal
             closeModal={() => this.closeModal()}
             isOpen={this.state.isOpen}
-            width="50%"
+            width={isMobile() ? '62%' : '50%'}
             render={() => (
               <TemplatesModal closeModal={() => this.closeModal()} />
             )}
