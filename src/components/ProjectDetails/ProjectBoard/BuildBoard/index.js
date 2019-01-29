@@ -166,7 +166,7 @@ class BuildBoard extends Component {
           const url = `https://client.mockbird.io${s.generatedURL}`
           return (
             <CardWithMargin key={key} elevation={Elevation.TWO}>
-              <li className="flex flex-column">
+              <li className="flex flex-column w-100">
                 <strong>{s.name}</strong>
                 <span className="w-100 flex items-center justify-between">
                   <OverflowText>
