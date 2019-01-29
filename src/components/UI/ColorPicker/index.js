@@ -15,9 +15,10 @@ const ColorPickerWrapper = styled.div`
     width: 50px;
     height: 50px;
     border: ${props =>
-      props.color.toLowerCase() === 'white' ||
-      props.color.toLowerCase() === '#fff' ||
-      props.color.toLowerCase() === '#ffffff'
+      props.color &&
+      (props.color.toLowerCase() === 'white' ||
+        props.color.toLowerCase() === '#fff' ||
+        props.color.toLowerCase() === '#ffffff')
         ? `1px solid ${gray400}`
         : 'none'};
     border-radius: 50%;
