@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Modal from '~/components/UI/Modal'
 import FormHandler from '~/components/FormHandler'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import {
@@ -31,10 +30,8 @@ const OverflowText = styled.span`
   text-overflow: ellipsis;
 `
 
-class BuildModal extends Component {
+class BuildBoard extends Component {
   static propTypes = {
-    closeModal: PropTypes.func,
-    isOpen: PropTypes.bool.isRequired,
     isBuilding: PropTypes.bool,
     screens: PropTypes.array,
     currentBuild: PropTypes.object,
@@ -53,9 +50,6 @@ class BuildModal extends Component {
     }))
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!nextProps.isOpen) {
-      return null
-    }
     if (nextProps.build || nextProps.screens) {
       if (!isEmpty(nextProps.build)) {
         let hasChanges = false
@@ -81,7 +75,6 @@ class BuildModal extends Component {
           }
         }, {})
         screenBuilds = { ...screenBuilds, ...newScreens }
-        console.log(newScreens)
         return { build: { ...nextProps.build, screenBuilds } }
       } else if (
         nextProps.screens &&
@@ -109,7 +102,6 @@ class BuildModal extends Component {
   }
 
   getFormFields(values, errors = {}, directChange) {
-    console.log({ values })
     return Object.keys(values).map(key => {
       const hasError = errors[key] ? Intent.DANGER : Intent.NONE
       const screen = values[key]
@@ -187,7 +179,7 @@ class BuildModal extends Component {
           )
         })}
         <li className="w-100 justify-end mt4">
-          <Button onClick={this.toggleShowBuild} intent={Intent.PRIMARY}>
+          <Button onClick={this.toggleShowBuild} intent={Intent.PRIMARY} large>
             Edit Build
           </Button>
         </li>
@@ -200,13 +192,13 @@ class BuildModal extends Component {
   }
 
   render() {
-    const { isOpen, closeModal, makeBuild, isBuilding } = this.props
+    const { makeBuild, isBuilding } = this.props
     const { build, showBuild } = this.state
     const hasScreens = build.screenBuilds
       ? Object.keys(build.screenBuilds).length > 0
       : false
     return (
-      <Modal isOpen={isOpen} closeModal={closeModal} title="Project Build">
+      <div>
         {showBuild ? (
           <div className="ph3 flex flex-column">
             <h3>
@@ -244,9 +236,11 @@ class BuildModal extends Component {
                     disabled={!isEmpty(errors) || !hasScreens}
                     intent={Intent.PRIMARY}
                     loading={isBuilding}
+                    rightIcon="build"
                     onClick={() =>
                       makeBuild(values).then(teste => this.toggleShowBuild())
                     }
+                    large
                   >
                     Build
                   </Button>
@@ -255,9 +249,9 @@ class BuildModal extends Component {
             )}
           </FormHandler>
         )}
-      </Modal>
+      </div>
     )
   }
 }
 
-export default BuildModal
+export default BuildBoard

@@ -5,7 +5,6 @@ import ScreensGrid from './ScreensGrid'
 import { observer, inject } from 'mobx-react'
 import { Button, Intent, Icon } from '@blueprintjs/core'
 import styled from 'styled-components'
-import BuildModal from './BuildModal'
 import { AdvancedConfigs } from '~/store'
 
 const ProjectButton = styled.button`
@@ -39,13 +38,19 @@ class ProjectMenu extends Component {
 
   state = {
     isUpdating: false,
-    isBuilding: false,
-    buildModalOpen: false,
     isAddingScreen: false,
   }
 
-  closeModal = () => {
-    this.setState({ buildModalOpen: false })
+  get isConfigOpen() {
+    return (
+      this.props.projectDetailStore.advancedConfig === AdvancedConfigs.config
+    )
+  }
+
+  get isBuildOpen() {
+    return (
+      this.props.projectDetailStore.advancedConfig === AdvancedConfigs.build
+    )
   }
 
   componentDidMount() {
@@ -69,16 +74,6 @@ class ProjectMenu extends Component {
       .concat()
   }
 
-  updateProject = async updatedProject => {
-    try {
-      this.setState({ isUpdating: true })
-      await this.props.projectDetailStore.updateProject(updatedProject)
-      this.setState({ isUpdating: false })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   addScreen() {
     this.setState({ isAddingScreen: true }, () => {
       this.props.projectDetailStore
@@ -98,50 +93,6 @@ class ProjectMenu extends Component {
     this.props.projectDetailStore.setAdvancedConfig(config)
   }
 
-  makeBuild = screens => {
-    return new Promise(async (resolve, reject) => {
-      const project = this.props.projectDetailStore.project
-
-      this.setState({ isBuilding: true }, async () => {
-        await this.props.projectDetailStore.setAllScreenInputs()
-        const deepScreens = this.props.projectDetailStore.deepScreens
-        const screenBuilds = deepScreens.map(screen => {
-          const { id, createdAt, maxWeight, ...rest } = screen
-          return {
-            ...rest,
-            id,
-            generatedURL: `/${project.id}/${id}`,
-            targetURL: screens[id].targetURL,
-          }
-        })
-        const build = {
-          projectId: project.id,
-          templateId: project.templateId,
-          primaryColor: project.primaryColor,
-          secundaryColor: project.secundaryColor,
-          accentColor: project.accentColor,
-          backgroundColor: project.backgroundColor,
-          screenBuilds,
-        }
-
-        await this.props.buildStore
-          .makeBuild(build)
-          .then(result => {
-            this.props.buildStore.setBuild(build)
-            this.setState({ isBuilding: false }, () => {
-              resolve(true)
-            })
-          })
-          .catch(err => {
-            console.error(err)
-            this.setState({ isBuilding: false }, () => {
-              reject(false)
-            })
-          })
-      })
-    })
-  }
-
   render() {
     const {
       isUpdating,
@@ -149,9 +100,8 @@ class ProjectMenu extends Component {
       buildModalOpen,
       isAddingScreen,
     } = this.state
-    const { history, projectDetailStore, buildStore } = this.props
+    const { history, projectDetailStore } = this.props
     const project = this.props.projectDetailStore.project
-    const screens = this.props.projectDetailStore.screens
     const build = this.props.buildStore.currentBuild
     return (
       <div className="flex flex-column h-100">
@@ -182,22 +132,22 @@ class ProjectMenu extends Component {
           backgroundColor="#FFB300"
           onClick={() => this.setAdvancedConfig(AdvancedConfigs.config)}
         >
-          <Icon icon="cog" color="white" iconSize={15} />
+          <Icon
+            icon="cog"
+            color={this.isConfigOpen ? '#29A634' : 'white'}
+            iconSize={this.isConfigOpen ? 20 : 15}
+          />
         </ProjectButton>
         <ProjectButton
           backgroundColor="#137cbd"
-          onClick={() => this.setState({ buildModalOpen: true })}
+          onClick={() => this.setAdvancedConfig(AdvancedConfigs.build)}
         >
-          <Icon icon="build" color="white" iconSize={15} />
+          <Icon
+            icon="build"
+            color={this.isBuildOpen ? '#29A634' : 'white'}
+            iconSize={this.isBuildOpen ? 20 : 15}
+          />
         </ProjectButton>
-        <BuildModal
-          build={buildStore.currentBuild}
-          isOpen={buildModalOpen}
-          closeModal={this.closeModal}
-          isBuilding={isBuilding}
-          screens={screens}
-          makeBuild={this.makeBuild}
-        />
       </div>
     )
   }
