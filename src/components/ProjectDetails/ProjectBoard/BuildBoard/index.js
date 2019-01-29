@@ -10,6 +10,8 @@ import {
   Icon,
   Tooltip,
   Position,
+  Card,
+  Elevation,
 } from '@blueprintjs/core'
 import isEmpty from 'lodash/isEmpty'
 import styled from 'styled-components'
@@ -28,6 +30,10 @@ const OverflowText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+
+const CardWithMargin = styled(Card)`
+  margin-bottom: 0.5rem;
 `
 
 class BuildBoard extends Component {
@@ -159,23 +165,25 @@ class BuildBoard extends Component {
           }
           const url = `https://client.mockbird.io${s.generatedURL}`
           return (
-            <li key={key} className="flex flex-column">
-              <strong>{s.name}</strong>
-              <span className="w-100 flex items-center justify-between">
-                <OverflowText>
-                  <Tooltip content={url} position={Position.BOTTOM}>
-                    {url}
+            <CardWithMargin key={key} elevation={Elevation.TWO}>
+              <li className="flex flex-column">
+                <strong>{s.name}</strong>
+                <span className="w-100 flex items-center justify-between">
+                  <OverflowText>
+                    <Tooltip content={url} position={Position.BOTTOM}>
+                      {url}
+                    </Tooltip>
+                  </OverflowText>
+                  <Tooltip content={copyText} position={Position.BOTTOM}>
+                    <CopyToClipboard text={url} onCopy={this.changeCopyText}>
+                      <Button intent={Intent.PRIMARY} minimal>
+                        <Icon icon="clipboard" iconSize={15} />
+                      </Button>
+                    </CopyToClipboard>
                   </Tooltip>
-                </OverflowText>
-                <Tooltip content={copyText} position={Position.BOTTOM}>
-                  <CopyToClipboard text={url} onCopy={this.changeCopyText}>
-                    <Button intent={Intent.PRIMARY} minimal>
-                      <Icon icon="clipboard" iconSize={15} />
-                    </Button>
-                  </CopyToClipboard>
-                </Tooltip>
-              </span>
-            </li>
+                </span>
+              </li>
+            </CardWithMargin>
           )
         })}
         <li className="w-100 justify-end mt4">

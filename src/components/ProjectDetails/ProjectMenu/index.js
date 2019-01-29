@@ -22,6 +22,10 @@ const ProjectButton = styled.button`
   &:hover {
     opacity: 0.6;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `
 const LoaderOverlay = styled.div`
   display: flex;
@@ -115,7 +119,6 @@ class ProjectMenu extends Component {
     const { history, projectDetailStore } = this.props
     const project = this.props.projectDetailStore.project
     const build = this.props.buildStore.currentBuild
-    console.log(projectDetailStore.screens)
     return (
       <div className="flex flex-column h-100">
         <div className="flex flex-row mv3">
@@ -149,6 +152,7 @@ class ProjectMenu extends Component {
         )}
         <ProjectButton
           backgroundColor="#FFB300"
+          disabled={loadingProject}
           onClick={() => this.setAdvancedConfig(AdvancedConfigs.config)}
         >
           <Icon
@@ -158,6 +162,7 @@ class ProjectMenu extends Component {
           />
         </ProjectButton>
         <ProjectButton
+          disabled={loadingProject}
           backgroundColor="#137cbd"
           onClick={() => this.setAdvancedConfig(AdvancedConfigs.build)}
         >
