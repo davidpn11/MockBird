@@ -62,6 +62,10 @@ class ProjectDisplay extends Component {
     selectedInput: '',
   }
 
+  get screenInputs() {
+    return this.props.projectDetailStore.screenInputs || []
+  }
+
   handleNameChange = event =>
     this.props.projectDetailStore.updateScreenName(event.target.value)
 
@@ -155,12 +159,11 @@ class ProjectDisplay extends Component {
       accentColor,
       backgroundColor,
     } = project
-    const screenInputs = this.props.projectDetailStore.screenInputs || []
     const screenId = this.props.projectDetailStore.currScreen.id || ''
     return (
       <AsyncStyled module={import('' + path)}>
         {Components =>
-          screenInputs.map(input => (
+          this.screenInputs.map(input => (
             <ScreenInput
               key={input.id}
               deleteInput={this.deleteInput(screenId, input.id)}
@@ -199,6 +202,8 @@ class ProjectDisplay extends Component {
           <Phone>
             {hasCurrentScreen ? (
               <HelperText text="Select or create a screen to add new inputs" />
+            ) : isEmpty(this.screenInputs) ? (
+              <HelperText text="Add a new screen input" />
             ) : (
               <Display backgroundColor={project.backgroundColor}>
                 <div>{this.showInputs(project)}</div>
