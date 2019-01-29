@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 import ScreensGrid from './ScreensGrid'
 import { observer, inject } from 'mobx-react'
 import { Button, Intent, Icon } from '@blueprintjs/core'
-import ConfigModal from './ConfigModal'
 import styled from 'styled-components'
 import BuildModal from './BuildModal'
 import { AdvancedConfigs } from '~/store'
@@ -39,7 +38,6 @@ class ProjectMenu extends Component {
   }
 
   state = {
-    configModalOpen: false,
     isUpdating: false,
     isBuilding: false,
     buildModalOpen: false,
@@ -47,7 +45,7 @@ class ProjectMenu extends Component {
   }
 
   closeModal = () => {
-    this.setState({ configModalOpen: false, buildModalOpen: false })
+    this.setState({ buildModalOpen: false })
   }
 
   componentDidMount() {
@@ -75,7 +73,7 @@ class ProjectMenu extends Component {
     try {
       this.setState({ isUpdating: true })
       await this.props.projectDetailStore.updateProject(updatedProject)
-      this.setState({ isUpdating: false, configModalOpen: false })
+      this.setState({ isUpdating: false })
     } catch (error) {
       console.error(error)
     }
@@ -146,7 +144,6 @@ class ProjectMenu extends Component {
 
   render() {
     const {
-      configModalOpen,
       isUpdating,
       isBuilding,
       buildModalOpen,
@@ -183,7 +180,6 @@ class ProjectMenu extends Component {
         />
         <ProjectButton
           backgroundColor="#FFB300"
-          // onClick={() => this.setState({ configModalOpen: true })}
           onClick={() => this.setAdvancedConfig(AdvancedConfigs.config)}
         >
           <Icon icon="cog" color="white" iconSize={15} />
@@ -194,13 +190,6 @@ class ProjectMenu extends Component {
         >
           <Icon icon="build" color="white" iconSize={15} />
         </ProjectButton>
-        <ConfigModal
-          isOpen={configModalOpen}
-          closeModal={this.closeModal}
-          project={project}
-          updateProject={this.updateProject}
-          isUpdating={isUpdating}
-        />
         <BuildModal
           build={buildStore.currentBuild}
           isOpen={buildModalOpen}
