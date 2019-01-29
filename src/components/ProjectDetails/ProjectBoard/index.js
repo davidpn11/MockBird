@@ -98,7 +98,6 @@ class ProjectBoard extends Component {
           />
         )
       } else if (advancedConfig === AdvancedConfigs.build) {
-        console.log(buildStore.currentBuild, screens)
         return (
           <BuildBoard
             build={buildStore.currentBuild}

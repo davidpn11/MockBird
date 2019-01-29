@@ -6,6 +6,8 @@ import { observer, inject } from 'mobx-react'
 import { Button, Intent, Icon } from '@blueprintjs/core'
 import styled from 'styled-components'
 import { AdvancedConfigs } from '~/store'
+import Loader from 'react-loaders'
+import { gray800 } from '~/services/utils/colors'
 
 const ProjectButton = styled.button`
   display: flex;
@@ -20,6 +22,13 @@ const ProjectButton = styled.button`
   &:hover {
     opacity: 0.6;
   }
+`
+const LoaderOverlay = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: ${gray800};
 `
 
 @inject('projectDetailStore')
@@ -37,6 +46,7 @@ class ProjectMenu extends Component {
   }
 
   state = {
+    loadingProject: true,
     isUpdating: false,
     isAddingScreen: false,
   }
@@ -56,7 +66,9 @@ class ProjectMenu extends Component {
   componentDidMount() {
     const { id = '' } = this.props.match.params
     this.props.buildStore.initialize(id)
-    this.props.projectDetailStore.setProject(id)
+    this.props.projectDetailStore
+      .setProject(id)
+      .then(res => this.setState({ loadingProject: false }))
   }
 
   getScreens() {
@@ -96,13 +108,14 @@ class ProjectMenu extends Component {
   render() {
     const {
       isUpdating,
-      isBuilding,
+      loadingProject,
       buildModalOpen,
       isAddingScreen,
     } = this.state
     const { history, projectDetailStore } = this.props
     const project = this.props.projectDetailStore.project
     const build = this.props.buildStore.currentBuild
+    console.log(projectDetailStore.screens)
     return (
       <div className="flex flex-column h-100">
         <div className="flex flex-row mv3">
@@ -120,14 +133,20 @@ class ProjectMenu extends Component {
             <span>Last published: {build.modifiedAt || '-'}</span>
           </div>
         </div>
-        <ScreensGrid
-          screens={projectDetailStore.screens}
-          currScreen={projectDetailStore.currScreen}
-          changeCurrScreen={id => this.changeCurrentScreen(id)}
-          addScreen={() => this.addScreen()}
-          deleteScreen={this.deleteScreen}
-          isAddingScreen={isAddingScreen}
-        />
+        {loadingProject ? (
+          <LoaderOverlay>
+            <Loader type="ball-pulse-sync" />
+          </LoaderOverlay>
+        ) : (
+          <ScreensGrid
+            screens={projectDetailStore.screens}
+            currScreen={projectDetailStore.currScreen}
+            changeCurrScreen={id => this.changeCurrentScreen(id)}
+            addScreen={() => this.addScreen()}
+            deleteScreen={this.deleteScreen}
+            isAddingScreen={isAddingScreen}
+          />
+        )}
         <ProjectButton
           backgroundColor="#FFB300"
           onClick={() => this.setAdvancedConfig(AdvancedConfigs.config)}

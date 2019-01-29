@@ -132,9 +132,11 @@ class ProjectDetailStore {
           proj.screens = [...proj.screens, { ...doc.data(), id: doc.id }]
         })
       this._project = proj
-      this.setCurrentScreen()
+      await this.setCurrentScreen()
+      return true
     } catch (error) {
       console.error(error)
+      return false
     }
   }
 
